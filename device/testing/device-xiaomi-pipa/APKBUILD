@@ -28,11 +28,15 @@ source="
 	modules-initfs
 	ucm2/xiaomi-pipa.conf
 	ucm2/HiFi.conf
+	mnt-vendor-persist.mount
+	hexagonrpcd-after-persist.conf
+	iio-sensor-proxy-after-hexagonrpcd.conf
 "
 
 subpackages="
 	$pkgname-nonfree-firmware:nonfree_firmware
 	$pkgname-openrc
+	$pkgname-systemd
 	$pkgname-iio-hack:iio_hack
 "
 
@@ -81,6 +85,26 @@ openrc() {
 		"$subpkgdir"/etc/conf.d/hexagonrpcd-sdsp
 }
 
+systemd() {
+	pkgdesc="Systemd services and drop-ins"
+	install_if="$pkgname=$pkgver-r$pkgrel systemd"
+
+	# Install and enable the mount unit
+	install -Dm644 "$srcdir"/mnt-vendor-persist.mount \
+		"$subpkgdir"/usr/lib/systemd/system/mnt-vendor-persist.mount
+	mkdir -p "$subpkgdir"/usr/lib/systemd/system/local-fs.target.wants
+	ln -s ../mnt-vendor-persist.mount "$subpkgdir"/usr/lib/systemd/system/local-fs.target.wants/mnt-vendor-persist.mount
+
+	# Install hexagonrpcd drop-in
+	install -Dm644 "$srcdir"/hexagonrpcd-after-persist.conf \
+		"$subpkgdir"/usr/lib/systemd/system/hexagonrpcd-sdsp.service.d/10-after-persist.conf
+
+	# Install iio-sensor-proxy drop-in
+	install -Dm644 "$srcdir"/iio-sensor-proxy-after-hexagonrpcd.conf \
+		"$subpkgdir"/usr/lib/systemd/system/iio-sensor-proxy.service.d/10-after-hexagonrpcd.conf
+}
+
+
 iio_hack() {
 	install_if="iio-sensor-proxy"
 	install="$subpkgname.post-install $subpkgname.post-upgrade"
@@ -95,4 +119,7 @@ bbfb6f9dc69988dd9a06ba198668075149f36471e6100cd32c7b470a0989477f6627dc5c635fdf50
 0ed30a12ca1bc08eb03db84d929c85cf82113dcfc44b4c5588722acfe8cbb02e72044ad4c733bfacedbdcec99234bb67f7d7ee97319a66229091037a92e85375  modules-initfs
 007908c49db107dd8289a96049ed4d77a55c7846e21f76fa7f97306df953ccdec7d821cbc7732a3ff7c532285175ebf0d6a4e3f224740ac002b23f3608cbf76d  xiaomi-pipa.conf
 1c8cef1f2de5fd7e734796dfffc684255b047bdb07a0965676a4d8d512aee4963ce91aeabf8627ce3aea72aeade776a3529f205badd2ed27ba072cadc38f9918  HiFi.conf
+b1ef4f2a26a02952a60b80b8ab4b8dd5f534e48de08331a572c6a733bf106f40dedab527f57c6e0f4e7a4ee558ae512b8c54be9fd69a263c9045d5b35769f53b  mnt-vendor-persist.mount
+b728a6a95082d7c73bc8a42408a26af6c6e52a10dac57c461f776735a2c7d0c691b3a345ec9ec623ca5085d9e4411e1d96a44ef0d82f1c357acb95d1105abb39  hexagonrpcd-after-persist.conf
+d3343d2968d175308fca3c8a31b46aaff10abd24b48d9d1844d3c75d80adb46866206382911ec6dbc2f955d792f5521cd78a025072ab5c6b436d6c6aaf30ab0d  iio-sensor-proxy-after-hexagonrpcd.conf
 "

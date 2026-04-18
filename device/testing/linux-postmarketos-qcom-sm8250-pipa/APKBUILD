@@ -29,7 +29,7 @@ makedepends="
 "
 
 # Source
-_commit="2c55b2624ef326032566fc224bee681a54eb5980"
+_commit="cc39f8e14a6384630bb9acf14ae4fe45b27d83fa"
 _config="config-$_flavor.$arch"
 
 source="
@@ -67,6 +67,6 @@ package() {
 }
 
 sha512sums="
-2b118f1bfb10f9a75c6319faca35542ee5e03c142491bf91c99a1d20ba618039e9daa9946f13a8410e62680fd14d41f392268599333400bcb008c6de0d3ab299  linux-postmarketos-qcom-sm8250-pipa.tar.gz
+4797268399f2c1c5b8789e8040b7b769dd9babc6a92e73f48c69048865a511f2389a3468aee6361f7b13b2148f0a23b8f6c4480e21134551e61484fd45cf9619  linux-postmarketos-qcom-sm8250-pipa.tar.gz
 d5bc7838a691dd1c4c5e29ac9ea61e5220b83ed9c395a31ad2efb42b5a5f55cc4137a83741f0a495be036c121583b6be06a19ce457c9577646a09d28f07fc036  config-postmarketos-qcom-sm8250-pipa.aarch64
 "

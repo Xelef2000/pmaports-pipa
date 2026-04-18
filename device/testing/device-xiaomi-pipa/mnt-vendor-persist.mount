@@ -1,0 +1,12 @@
+[Unit]
+Description=Mount persist partition for Xiaomi Pad 6
+Before=local-fs.target
+
+[Mount]
+What=/dev/disk/by-partlabel/persist
+Where=/mnt/vendor/persist
+Type=ext4
+Options=defaults,nofail
+
+[Install]
+WantedBy=local-fs.target
